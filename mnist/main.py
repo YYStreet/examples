@@ -7,6 +7,20 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.optim.lr_scheduler import StepLR
 
+# Temporary patch this script until the MNIST dataset download issue get resolved
+# https://github.com/pytorch/vision/issues/1938
+import urllib
+# For python 2
+try:
+    class AppURLopener(urllib.FancyURLopener):
+        version = "Mozilla/5.0"
+
+    urllib._urlopener = AppURLopener()
+except AttributeError:
+    # For python 3
+    opener = urllib.request.build_opener()
+    opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+    urllib.request.install_opener(opener)
 
 class Net(nn.Module):
     def __init__(self):
